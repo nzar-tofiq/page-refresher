@@ -1,56 +1,58 @@
 <!-- please use tabs for indentation -->
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<script src="jquery.js"></script>
-		<title>Refresher</title>
-	</head>
-	<body>
-		<!-- date format can be "dd/mm/yyyy hh:mm:ss" or "yyyy-mm-dd hh:mm:ss" -->
-		<span data-refresh-time="10/09/2016 16:15:00" data-refresh-check-interval="5000"></span>
-		<span data-refresh-time="2016-10-09 16:45:00" data-refresh-check-interval="2500"></span>
 
-		<script>
-			$(function(){
-				var $trigger = $('[data-refresh-time]'), datetime, interval, datetimeArray, dd, mm, refreshTime;
-				if ( $trigger.length ) {
-					$trigger.each( function(){
-						datetime = $(this).data('refresh-time');
-						interval = $(this).data('refresh-check-interval') || 1000;	// default to 1 second
+    <head>
+        <meta charset="utf-8">
+        <script src="jquery.js"></script>
+        <title>Refresher</title>
+    </head>
 
-						// extra processing needed for british format only when the datetime has slashes
-            function localiseDatetimeInput(datetime) {
-							// We expect the user to input dd/mm
-							datetimeArray = datetime.split('/');
-							// Get dd and mm from user input
-							dd = datetimeArray.shift(); // if we only want the first item, we can pop it off
-							mm = datetimeArray.shift(); // ..
-							// datetime converted to the mm/dd format so javascript gets the right datetime
-							return [mm, dd, datetimeArray].join('/');
-            }
+    <body>
+        <!-- date format can be "dd/mm/yyyy hh:mm:ss" or "yyyy-mm-dd hh:mm:ss" -->
+        <span data-refresh-time="10/09/2016 16:15:00" data-refresh-check-interval="5000"></span>
+        <span data-refresh-time="2016-10-09 16:45:00" data-refresh-check-interval="2500"></span>
 
-            if ( datetime.indexOf('/') > -1) {
-              datetime = localiseDatetimeInput(datetime);
-            }
+        <script>
+            $(function() {
+                var $trigger = $('[data-refresh-time]'),
+                    datetime, interval, datetimeArray, dd, mm, refreshTime;
+                if ($trigger.length) {
+                    $trigger.each(function() {
+                        datetime = $(this).data('refresh-time');
+                        interval = $(this).data('refresh-check-interval') || 1000; // default to 1 second
 
-            console.log(datetime);
+                        // extra processing needed for british format only when the datetime has slashes
+                        function localiseDatetimeInput(datetime) {
+                            // We expect the user to input dd/mm
+                            datetimeArray = datetime.split('/');
+                            // Get dd and mm from user input
+                            dd = datetimeArray.shift(); // if we only want the first item, we can pop it off
+                            mm = datetimeArray.shift(); // ..
+                            // datetime converted to the mm/dd format so javascript gets the right datetime
+                            return [mm, dd, datetimeArray].join('/');
+                        }
 
-						refreshTime = new Date( datetime );
-						console.log( "refresh trigger set for:", refreshTime, "checking every:", ( interval / 1000 ), "seconds" );
+                        if (datetime.indexOf('/') > -1) {
+                            datetime = localiseDatetimeInput(datetime);
+                        }
 
-						// need to keep checking if we've reached the refresh time yet
-						setInterval( function () {
-							if ( new Date() > refreshTime ) {
-								console.log( refreshTime + ' refresh..');
-  	              //location.reload();
-							} else {
-								console.log( refreshTime + ' still waiting..');
-							}
-						}, interval );
-					} );
-				}
-			});
-		</script>
-	</body>
+                        refreshTime = new Date(datetime);
+                        console.log("refresh trigger set for:", refreshTime, "checking every:", (interval / 1000), "seconds");
+
+                        // need to keep checking if we've reached the refresh time yet
+                        setInterval(function() {
+                            if (new Date() > refreshTime) {
+                                console.log(refreshTime + ' refresh..');
+                                //location.reload();
+                            } else {
+                                console.log(refreshTime + ' still waiting..');
+                            }
+                        }, interval);
+                    });
+                }
+            });
+        </script>
+    </body>
+
 </html>
