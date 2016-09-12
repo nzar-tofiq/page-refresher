@@ -13,24 +13,30 @@
 
 		<script>
 			$(function(){
-				var $trigger = $('[data-refresh-time]');
+				var $trigger = $('[data-refresh-time]'), datetime, interval, datetimeArray, dd, mm, refreshTime;
 				if ( $trigger.length ) {
 					$trigger.each( function(){
-						var datetime = $(this).data('refresh-time');
-						var interval = $(this).data('refresh-check-interval') || 1000;	// default to 1 second
+						datetime = $(this).data('refresh-time');
+						interval = $(this).data('refresh-check-interval') || 1000;	// default to 1 second
 
 						// extra processing needed for british format only when the datetime has slashes
-						if ( datetime.indexOf('/') > 0 ) {
+            function localiseDatetimeInput(datetime) {
 							// We expect the user to input dd/mm
-							britishDatetimeArray = datetime.split('/');
-							// Gets the dd from user input
-							var dd = britishDatetimeArray.shift(); // if we only want the first item, we can pop it off
-							var mm = britishDatetimeArray.shift(); // ..
+							datetimeArray = datetime.split('/');
+							// Get dd and mm from user input
+							dd = datetimeArray.shift(); // if we only want the first item, we can pop it off
+							mm = datetimeArray.shift(); // ..
 							// datetime converted to the mm/dd format so javascript gets the right datetime
-							datetime = [mm, dd, britishDatetimeArray].join('/');
-						}
+							return [mm, dd, datetimeArray].join('/');
+            }
 
-						var refreshTime = new Date( datetime );
+            if ( datetime.indexOf('/') > -1) {
+              datetime = localiseDatetimeInput(datetime);
+            }
+
+            console.log(datetime);
+
+						refreshTime = new Date( datetime );
 						console.log( "refresh trigger set for:", refreshTime, "checking every:", ( interval / 1000 ), "seconds" );
 
 						// need to keep checking if we've reached the refresh time yet
